@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zeitstrahl Aufbautraining Art. 14a IVG</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f4f0;
+    --text: #1a1a19;
+    --text-secondary: #5f5e5a;
+    --border: rgba(0,0,0,0.12);
+    --border-secondary: rgba(0,0,0,0.22);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c;
+      --bg-secondary: #2a2a28;
+      --text: #f0ede6;
+      --text-secondary: #9e9c95;
+      --border: rgba(255,255,255,0.12);
+      --border-secondary: rgba(255,255,255,0.22);
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    line-height: 1.6;
+  }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 1.75rem; }
+
+  .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .input-group { display: flex; flex-direction: column; gap: 6px; }
+  .input-group label { font-size: 13px; color: var(--text-secondary); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+  .input-group input[type="date"] {
+    border: 0.5px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    padding: 9px 12px;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--text);
+    width: 100%;
+  }
+  .input-group input:focus { outline: none; border-color: #185FA5; box-shadow: 0 0 0 2px rgba(24,95,165,0.15); }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.5rem; }
+  .metric { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px; }
+  .metric-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+  .metric-value { font-size: 14px; font-weight: 500; }
+
+  .section-title {
+    font-size: 11px; font-weight: 600; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.75rem;
+  }
+
+  .pensum-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
+  .pensum-step { border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 10px 12px; background: var(--bg); }
+  .pensum-step-phase { font-size: 11px; color: var(--text-secondary); margin-bottom: 2px; }
+  .pensum-step-value { font-size: 18px; font-weight: 600; }
+  .pensum-step-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  .pensum-track { position: relative; height: 28px; background: var(--bg-secondary); border-radius: 14px; overflow: hidden; margin-bottom: 6px; border: 0.5px solid var(--border); }
+  .pensum-fill { height: 100%; border-radius: 14px; display: flex; align-items: center; padding-left: 12px; font-size: 12px; font-weight: 600; color: #042C53; transition: width 0.4s ease; background: linear-gradient(90deg, #B5D4F4, #185FA5); }
+  .pensum-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 10px; bottom: 10px; width: 1px; background: var(--border-secondary); }
+
+  .event { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .event:last-child { border-bottom: none; }
+  .event-dot { position: absolute; left: -22px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid; background: var(--bg); margin-top: 3px; }
+  .event-dot.big { width: 18px; height: 18px; left: -24px; border-width: 3px; }
+  .dot-blue { border-color: #185FA5; }
+  .dot-teal { border-color: #0F6E56; }
+  .dot-amber { border-color: #854F0B; }
+  .dot-coral { border-color: #993C1D; }
+  .dot-purple { border-color: #534AB7; }
+  .past .event-dot { opacity: 0.4; }
+
+  .event-date { font-size: 12px; color: var(--text-secondary); min-width: 90px; padding-top: 2px; font-variant-numeric: tabular-nums; }
+  .past .event-date { opacity: 0.5; }
+  .event-content { flex: 1; }
+  .event-title { font-size: 14px; font-weight: 500; }
+  .event-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .past .event-title { opacity: 0.55; }
+
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--radius-md); margin-top: 4px; font-weight: 500; }
+  .badge-blue { background: #E6F1FB; color: #0C447C; }
+  .badge-teal { background: #E1F5EE; color: #085041; }
+  .badge-amber { background: #FAEEDA; color: #633806; }
+  .badge-coral { background: #FAECE7; color: #712B13; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-today { background: #EAF3DE; color: #27500A; margin-left: 6px; }
+
+  .highlight-title { font-size: 15px !important; }
+
+  .placeholder { color: var(--text-secondary); font-size: 14px; padding: 1.5rem 0; display: flex; align-items: center; gap: 8px; }
+
+  .export-bar { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .btn-export { display: inline-flex; align-items: center; gap: 8px; background: #185FA5; color: #fff; border: none; border-radius: var(--radius-md); padding: 10px 18px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+  .btn-export:hover { background: #0C447C; }
+  .export-hint { font-size: 12px; color: var(--text-secondary); }
+
+  .btn-print { display: inline-flex; align-items: center; gap: 8px; background: var(--bg-secondary); color: var(--text); border: 0.5px solid var(--border-secondary); border-radius: var(--radius-md); padding: 10px 18px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+  .btn-print:hover { background: var(--border); }
+  .print-date { display: none; font-size: 11px; color: var(--text-secondary); margin-bottom: 1.25rem; }
+
+  @media (max-width: 560px) {
+    .inputs { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .pensum-steps { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { padding: 1rem; max-width: 100%; }
+    .export-bar, .inputs { display: none !important; }
+    .print-date { display: block !important; }
+    .metrics { display: grid !important; }
+    .pensum-fill { background: linear-gradient(90deg, #B5D4F4, #185FA5) !important; color: #042C53 !important; }
+    .badge-blue { background: #E6F1FB !important; color: #0C447C !important; }
+    .badge-teal { background: #E1F5EE !important; color: #085041 !important; }
+    .badge-amber { background: #FAEEDA !important; color: #633806 !important; }
+    .badge-coral { background: #FAECE7 !important; color: #712B13 !important; }
+    .badge-purple { background: #EEEDFE !important; color: #3C3489 !important; }
+    .metric { background: #f5f4f0 !important; }
+    .pensum-step { border: 0.5px solid #ccc !important; }
+    .pensum-track { background: #eee !important; }
+  }
+</style>
+</head>
+<body>
+
+<h1><i class="ti ti-calendar-stats" aria-hidden="true"></i> Zeitstrahl Aufbautraining</h1>
+<p class="subtitle">Art. 14a IVG · 3 Monate · 20 % → ≥ 50 % Pensum</p>
+<p class="print-date" id="print-date"></p>
+
+<div class="inputs" style="margin-bottom:0.75rem;">
+  <div class="input-group" style="grid-column:1/-1;">
+    <label for="vpname"><i class="ti ti-user" aria-hidden="true"></i> Name der versicherten Person</label>
+    <input type="text" id="vpname" placeholder="z.B. Muster Maria" style="border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);padding:9px 12px;font-size:14px;background:var(--bg);color:var(--text);width:100%;" />
+  </div>
+  <div class="input-group">
+    <label for="kuerzel"><i class="ti ti-id-badge" aria-hidden="true"></i> Namenskürzel</label>
+    <input type="text" id="kuerzel" placeholder="z.B. MUM" maxlength="10" style="border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);padding:9px 12px;font-size:14px;background:var(--bg);color:var(--text);width:100%;" />
+  </div>
+  <div class="input-group">
+    <label for="svnr"><i class="ti ti-hash" aria-hidden="true"></i> AHV-/Sozialversicherungsnummer</label>
+    <input type="text" id="svnr" placeholder="756.XXXX.XXXX.XX" maxlength="16" style="border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);padding:9px 12px;font-size:14px;background:var(--bg);color:var(--text);width:100%;" />
+  </div>
+</div>
+
+<div class="inputs">
+  <div class="input-group">
+    <label for="startdate"><i class="ti ti-calendar" aria-hidden="true"></i> Startdatum Massnahme</label>
+    <input type="date" id="startdate" />
+  </div>
+  <div class="input-group">
+    <label for="standdatum"><i class="ti ti-map-pin" aria-hidden="true"></i> Standortgespräch (optional)</label>
+    <input type="date" id="standdatum" />
+  </div>
+  <div class="input-group">
+    <label for="startpensum"><i class="ti ti-trending-up" aria-hidden="true"></i> Startpensum (%)</label>
+    <input type="number" id="startpensum" min="5" max="90" step="5" value="20" style="border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);padding:9px 12px;font-size:14px;background:var(--bg);color:var(--text);width:100%;" />
+  </div>
+  <div class="input-group">
+    <label for="zielpensum"><i class="ti ti-target" aria-hidden="true"></i> Zielpensum (%)</label>
+    <input type="number" id="zielpensum" min="10" max="100" step="5" value="50" style="border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);padding:9px 12px;font-size:14px;background:var(--bg);color:var(--text);width:100%;" />
+  </div>
+</div>
+
+<div id="metrics" class="metrics" style="display:none;">
+  <div class="metric"><div class="metric-label">Startdatum</div><div class="metric-value" id="m-start">—</div></div>
+  <div class="metric"><div class="metric-label">Enddatum</div><div class="metric-value" id="m-end">—</div></div>
+  <div class="metric"><div class="metric-label">Standortgespräch</div><div class="metric-value" id="m-stand">—</div></div>
+  <div class="metric"><div class="metric-label">Zielpensum</div><div class="metric-value" id="m-ziel">≥ 50 %</div></div>
+</div>
+
+<div id="pensum-section" style="display:none;">
+  <div class="section-title">Pensumverlauf</div>
+  <div class="pensum-steps">
+    <div class="pensum-step">
+      <div class="pensum-step-phase">Woche 1–2</div>
+      <div class="pensum-step-value" style="color:#185FA5;" id="ps-start">20 %</div>
+      <div class="pensum-step-label">Einstieg</div>
+    </div>
+    <div class="pensum-step">
+      <div class="pensum-step-phase">Woche 3–5</div>
+      <div class="pensum-step-value" style="color:#0F6E56;" id="ps-mid1">30 %</div>
+      <div class="pensum-step-label">Erste Steigerung</div>
+    </div>
+    <div class="pensum-step">
+      <div class="pensum-step-phase">Monat 2</div>
+      <div class="pensum-step-value" style="color:#854F0B;" id="ps-mid2">40 %</div>
+      <div class="pensum-step-label">Ausdauer & Regelmässigkeit</div>
+    </div>
+    <div class="pensum-step">
+      <div class="pensum-step-phase">Standortgespräch</div>
+      <div class="pensum-step-value" style="color:#534AB7;" id="ps-ziel">≥ 50 %</div>
+      <div class="pensum-step-label">Zielniveau</div>
+    </div>
+  </div>
+  <div class="pensum-track">
+    <div class="pensum-fill" id="pensum-fill" style="width:0%;"><span id="pensum-text"></span></div>
+  </div>
+  <div class="pensum-labels">
+    <span>0 %</span><span>25 %</span><span>50 %</span><span>75 %</span><span>100 %</span>
+  </div>
+</div>
+
+<div id="timeline-section" style="display:none;">
+  <div class="section-title">Alle Termine im Überblick</div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<p id="placeholder" class="placeholder">
+  <i class="ti ti-arrow-up" aria-hidden="true"></i> Bitte Startdatum eingeben, um alle Termine zu berechnen.
+</p>
+
+<div id="export-bar" class="export-bar" style="display:none;">
+  <button class="btn-export" onclick="exportICS()">
+    <i class="ti ti-calendar-down" aria-hidden="true"></i> Alle Termine in Outlook importieren (.ics)
+  </button>
+  <button class="btn-print" onclick="window.print()">
+    <i class="ti ti-printer" aria-hidden="true"></i> Drucken
+  </button>
+  <span class="export-hint">ICS: Doppelklick auf Datei → Outlook öffnet sich automatisch</span>
+</div>
+
+<script>
+const fmt = d => d ? d.toLocaleDateString('de-CH', { day:'2-digit', month:'2-digit', year:'numeric' }) : '—';
+const addDays = (d, n) => { const r = new Date(d); r.setDate(r.getDate() + n); return r; };
+const addMonths = (d, n) => { const r = new Date(d); r.setMonth(r.getMonth() + n); return r; };
+const endDate = (d, n) => { const r = new Date(d); r.setMonth(r.getMonth() + n); r.setDate(r.getDate() - 1); return r; };
+
+let currentEvents = [];
+
+function icsDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}${m}${day}`;
+}
+
+function exportICS() {
+  if (!currentEvents.length) return;
+  const kuerzel = document.getElementById('kuerzel').value.trim();
+  const svnr    = document.getElementById('svnr').value.trim();
+  const prefix  = [kuerzel, svnr].filter(Boolean).join(' | ');
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Aufbautraining IVG//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH'];
+  currentEvents.forEach((ev, i) => {
+    const uid = `ivg-${icsDate(ev.date)}-${i}@aufbautraining`;
+    const title = prefix ? `[${prefix}] ${ev.title}` : ev.title;
+    lines.push('BEGIN:VEVENT');
+    lines.push(`UID:${uid}`);
+    lines.push(`DTSTART;VALUE=DATE:${icsDate(ev.date)}`);
+    lines.push(`DTEND;VALUE=DATE:${icsDate(addDays(ev.date, 1))}`);
+    lines.push(`SUMMARY:${title}`);
+    lines.push(`DESCRIPTION:${ev.desc}`);
+    lines.push('END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'aufbautraining_ivg_termine.ics';
+  a.click();
+}
+
+function getCurrentPensum(start, today, startP, zielP) {
+  const diff = Math.floor((today - start) / 86400000);
+  if (diff < 0) return startP;
+  if (diff >= 91) return zielP;
+  return Math.round(startP + (diff / 91) * (zielP - startP));
+}
+
+function render() {
+  const sVal = document.getElementById('startdate').value;
+  const show = v => document.getElementById(v).style.display = '';
+  const hide = v => document.getElementById(v).style.display = 'none';
+
+  if (!sVal) {
+    ['metrics','pensum-section','timeline-section','export-bar'].forEach(hide);
+    show('placeholder');
+    return;
+  }
+  hide('placeholder');
+
+  const start = new Date(sVal);
+  const end = endDate(start, 3);
+  const startP = Math.max(5, Math.min(90, parseInt(document.getElementById('startpensum').value) || 20));
+  const zielP  = Math.max(10, Math.min(100, parseInt(document.getElementById('zielpensum').value)  || 50));
+  const mid1 = Math.round(startP + (zielP - startP) * 0.33);
+  const mid2 = Math.round(startP + (zielP - startP) * 0.66);
+
+  // Update pensum step display
+  document.getElementById('ps-start').textContent = startP + ' %';
+  document.getElementById('ps-mid1').textContent  = '~' + mid1 + ' %';
+  document.getElementById('ps-mid2').textContent  = '~' + mid2 + ' %';
+  document.getElementById('ps-ziel').textContent  = '≥ ' + zielP + ' %';
+  document.getElementById('m-ziel').textContent   = '≥ ' + zielP + ' %';
+
+  const standVal = document.getElementById('standdatum').value;
+  const stand = standVal ? new Date(standVal) : addDays(end, -17);
+
+  const events = [
+    { date: start, title: 'Start Aufbautraining', desc: 'Einstieg, Stabilisierung Tagesstruktur', badge: startP + ' %', cls: 'badge-blue', dot: 'dot-blue' },
+    { date: addDays(start, 14), title: 'Erste Rückmeldung IV-Stelle', desc: 'Verlaufseinschätzung, Startpensum, erste Eindrücke', badge: '+14 Tage', cls: 'badge-teal', dot: 'dot-teal' },
+    { date: addMonths(start, 1), title: 'Monatsbericht 1', desc: `Pensum ~${mid1}–${mid2} %, Belastbarkeit, Ausfälle`, badge: 'Monat 1', cls: 'badge-teal', dot: 'dot-teal' },
+    { date: addMonths(start, 2), title: 'Monatsbericht 2', desc: `Pensum ~${mid2}–${zielP} %, Ausdauer & Regelmässigkeit`, badge: 'Monat 2', cls: 'badge-teal', dot: 'dot-teal' },
+    { date: addDays(stand, -14), title: 'Schlussbericht erstellen', desc: '14 Tage vor Standortgespräch', badge: '−14 Tage', cls: 'badge-amber', dot: 'dot-amber' },
+    { date: addDays(stand, -12), title: 'Korrekturphase Bericht', desc: '12 Tage vor Standortgespräch', badge: '−12 Tage', cls: 'badge-amber', dot: 'dot-amber' },
+    { date: addDays(stand, -5), title: 'Provisorischen Bericht versenden', desc: '5 Tage vor Standortgespräch', badge: '−5 Tage', cls: 'badge-amber', dot: 'dot-amber' },
+    { date: stand, title: 'Standortgespräch', desc: `Bilanz, Pensum ≥ ${zielP} %, Anschlusslösung besprechen`, badge: 'Standortgespräch', cls: 'badge-purple', dot: 'dot-purple', highlight: true },
+    { date: end, title: 'Massnahmenende', desc: 'Abschluss Aufbautraining Art. 14a IVG', badge: 'Monat 3', cls: 'badge-blue', dot: 'dot-blue' },
+    { date: addDays(end, 10), title: 'Definitiver Schlussbericht an IV', desc: '10 Tage nach Massnahmenende', badge: '+10 Tage', cls: 'badge-coral', dot: 'dot-coral' },
+  ].sort((a, b) => a.date - b.date);
+
+  currentEvents = events;
+  document.getElementById('m-start').textContent = fmt(start);
+  document.getElementById('m-end').textContent = fmt(end);
+  document.getElementById('m-stand').textContent = fmt(stand);
+  const vpname  = document.getElementById('vpname').value.trim();
+  const kuerzel = document.getElementById('kuerzel').value.trim();
+  const svnr    = document.getElementById('svnr').value.trim();
+  const personInfo = [vpname, kuerzel, svnr].filter(Boolean).join(' · ');
+  document.getElementById('print-date').textContent = (personInfo ? personInfo + ' · ' : '') + `Start: ${fmt(start)} · Ende: ${fmt(end)} · Standortgespräch: ${fmt(stand)} · Gedruckt: ${fmt(new Date())}`;
+  ['metrics','pensum-section','timeline-section','export-bar'].forEach(show);
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const pensum = getCurrentPensum(start, today, startP, zielP);
+  document.getElementById('pensum-fill').style.width = pensum + '%';
+  document.getElementById('pensum-text').textContent = pensum + ' %';
+
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+  events.forEach(ev => {
+    const isPast = ev.date < today;
+    const isToday = ev.date.getTime() === today.getTime();
+    const div = document.createElement('div');
+    div.className = 'event' + (isPast ? ' past' : '');
+    div.innerHTML = `
+      <div class="event-dot ${ev.dot}${ev.highlight ? ' big' : ''}"></div>
+      <div class="event-date">${fmt(ev.date)}</div>
+      <div class="event-content">
+        <div class="event-title${ev.highlight ? ' highlight-title' : ''}">${ev.title}</div>
+        <div class="event-desc">${ev.desc}</div>
+        <span class="badge ${ev.cls}">${ev.badge}</span>
+        ${isToday ? '<span class="badge badge-today">Heute</span>' : ''}
+      </div>`;
+    tl.appendChild(div);
+  });
+}
+
+document.getElementById('startdate').addEventListener('change', render);
+document.getElementById('standdatum').addEventListener('change', render);
+document.getElementById('startpensum').addEventListener('input', render);
+document.getElementById('zielpensum').addEventListener('input', render);
+document.getElementById('vpname').addEventListener('input', render);
+document.getElementById('kuerzel').addEventListener('input', render);
+document.getElementById('svnr').addEventListener('input', render);
+
+const t = new Date();
+document.getElementById('startdate').value = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+render();
+</script>
+</body>
+</html>
